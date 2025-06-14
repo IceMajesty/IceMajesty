@@ -1,1 +1,1604 @@
-<!DOCTYPE html><html lang="ru"><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>Ice Majesty - Мир фигурного катания</title>    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap">    <style>        /* Базовые стили */        :root {            --primary: #121212;            --secondary: #1e1e1e;            --accent: #00b4d8;            --light: #f8f9fa;            --dark: #121212;            --ice: #90e0ef;            --text: #e9ecef;        }        * {            margin: 0;            padding: 0;            box-sizing: border-box;        }        body {            font-family: 'Montserrat', sans-serif;            background-color: var(--dark);            color: var(--text);            overflow-x: hidden;            line-height: 1.6;        }        /* Навигация */        .navbar {            display: flex;            justify-content: space-between;            align-items: center;            padding: 1.5rem 5%;            background-color: rgba(18, 18, 18, 0.9);            position: fixed;            width: 100%;            top: 0;            z-index: 1000;            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);            transition: all 0.3s ease;        }        .navbar.scrolled {            padding: 1rem 5%;            background-color: rgba(18, 18, 18, 0.98);        }        .navbar.scrolled .nav-link {            color: var(--ice);        }        .navbar.scrolled .logo {            color: var(--accent);        }        .logo {            font-size: 2rem;            cursor: pointer;            transition: all 0.3s ease;            color: var(--text);        }        .nav-links {            display: flex;            list-style: none;        }        .nav-link {            color: var(--text);            text-decoration: none;            margin: 0 1.5rem;            font-weight: 600;            position: relative;            transition: all 0.3s ease;        }        .nav-link:hover {            color: var(--accent);        }        .nav-link::after {            content: '';            position: absolute;            width: 0;            height: 2px;            background: var(--accent);            bottom: -5px;            left: 0;            transition: width 0.3s ease;        }        .nav-link:hover::after {            width: 100%;        }        .burger {            display: none;            cursor: pointer;        }        .burger div {            width: 25px;            height: 3px;            background-color: var(--text);            margin: 5px;            transition: all 0.3s ease;        }        /* Главный баннер */        .main-banner {            height: 100vh;            display: flex;            flex-direction: column;            justify-content: center;            align-items: center;            text-align: center;            position: relative;            overflow: hidden;            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);            padding: 0 5%;        }        .skater-path {            position: absolute;            width: 100%;            height: 2px;            background: rgba(144, 224, 239, 0.3);            top: 50%;            left: 0;            transform: translateY(-50%);        }        .skater {            position: absolute;            width: 80px;            height: 80px;            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2300b4d8"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M7.07 18.28c.43-.9 3.05-1.78 4.93-1.78s4.51.88 4.93 1.78C15.57 19.36 13.86 20 12 20s-3.57-.64-4.93-1.72zm11.29-1.45c-1.43-1.74-4.9-2.33-6.36-2.33s-4.93.59-6.36 2.33C4.62 15.49 4 13.82 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 1.82-.62 3.49-1.64 4.83zM12 6c-1.94 0-3.5 1.56-3.5 3.5S10.06 13 12 13s3.5-1.56 3.5-3.5S13.94 6 12 6zm0 5c-.83 0-1.5-.67-1.5-1.5S11.17 8 12 8s1.5.67 1.5 1.5S12.83 11 12 11z"/></svg>') no-repeat center;            background-size: contain;            top: 50%;            left: 0;            transform: translateY(-50%);            animation: skate 8s linear infinite;            filter: drop-shadow(0 0 10px rgba(0, 180, 216, 0.7));        }        @keyframes skate {            0% { left: 0; transform: translateY(-50%) rotate(0deg); }            25% { transform: translateY(-50%) rotate(90deg); }            50% { left: calc(100% - 80px); transform: translateY(-50%) rotate(180deg); }            75% { transform: translateY(-50%) rotate(270deg); }            100% { left: 0; transform: translateY(-50%) rotate(360deg); }        }        .ice-trail {            position: absolute;            width: 100%;            height: 100%;            top: 0;            left: 0;            pointer-events: none;        }        .ice-trail::after {            content: '';            position: absolute;            width: 100%;            height: 2px;            background: linear-gradient(90deg, transparent, var(--ice), transparent);            top: 50%;            left: 0;            transform: translateY(-50%);            opacity: 0.3;        }        .banner-content {            z-index: 10;            max-width: 800px;        }        .banner-content h1 {            font-family: 'Playfair Display', serif;            font-size: 4rem;            margin-bottom: 1.5rem;            background: linear-gradient(to right, var(--ice), var(--accent));            -webkit-background-clip: text;            -webkit-text-fill-color: transparent;            line-height: 1.2;        }        .banner-content p {            font-size: 1.3rem;            margin-bottom: 2.5rem;            opacity: 0.9;        }        .cta-button {            padding: 12px 30px;            background: transparent;            color: var(--ice);            border: 2px solid var(--accent);            border-radius: 30px;            font-size: 1rem;            font-weight: 600;            cursor: pointer;            transition: all 0.3s ease;            position: relative;            overflow: hidden;        }        .cta-button:hover {            background: var(--accent);            color: var(--dark);            transform: translateY(-3px);            box-shadow: 0 10px 20px rgba(0, 180, 216, 0.3);        }        .cta-button::before {            content: '';            position: absolute;            top: 0;            left: -100%;            width: 100%;            height: 100%;            background: linear-gradient(90deg, transparent, rgba(144, 224, 239, 0.4), transparent);            transition: 0.5s;        }        .cta-button:hover::before {            left: 100%;        }        .sparkles {            position: absolute;            width: 100%;            height: 100%;            top: 0;            left: 0;            pointer-events: none;            overflow: hidden;        }        .sparkle {            position: absolute;            width: 5px;            height: 5px;            background: white;            border-radius: 50%;            opacity: 0;            animation: sparkle 3s infinite;            filter: blur(1px);        }        @keyframes sparkle {            0% { transform: translateY(0) scale(0); opacity: 0; }            50% { opacity: 0.8; }            100% { transform: translateY(-100px) scale(1); opacity: 0; }        }        /* Секции */        section {            padding: 100px 5%;            min-height: 100vh;            opacity: 0;            transform: translateY(50px);            transition: opacity 0.5s ease, transform 0.5s ease;        }        section.visible {            opacity: 1;            transform: translateY(0);        }        h2 {            font-family: 'Playfair Display', serif;            font-size: 3rem;            text-align: center;            margin-bottom: 60px;            position: relative;            color: var(--ice);        }        h2::after {            content: '';            position: absolute;            width: 100px;            height: 4px;            background: var(--accent);            bottom: -15px;            left: 50%;            transform: translateX(-50%);        }        /* Секция "Звёзды" */        .stars-grid {            display: grid;            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));            gap: 30px;            margin-top: 50px;        }        .star-card {            background: var(--secondary);            border-radius: 10px;            overflow: hidden;            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);            transition: all 0.3s ease;            position: relative;            border: 1px solid rgba(144, 224, 239, 0.1);        }        .star-card:hover {            transform: translateY(-5px);            box-shadow: 0 10px 20px rgba(0, 180, 216, 0.2);            border-color: var(--accent);        }        .star-image {            height: 300px;            background-size: cover;            background-position: center;            position: relative;        }        .star-info {            padding: 20px;        }        .star-info h3 {            font-size: 1.5rem;            margin-bottom: 10px;            color: var(--ice);        }        .star-info p {            color: var(--text);            margin-bottom: 15px;            opacity: 0.8;        }        .star-badge {            position: absolute;            top: 20px;            right: 20px;            background: var(--accent);            color: var(--dark);            padding: 5px 10px;            border-radius: 20px;            font-size: 0.8rem;            font-weight: bold;        }        /* Таймлайн */        .timeline-container {            position: relative;            max-width: 1200px;            margin: 0 auto;            padding: 40px 0;        }        .timeline-container::after {            content: '';            position: absolute;            width: 6px;            background: var(--accent);            top: 0;            bottom: 0;            left: 50%;            margin-left: -3px;            border-radius: 3px;        }        .timeline-item {            padding: 10px 40px;            position: relative;            width: 50%;            box-sizing: border-box;            opacity: 0;            transform: translateY(50px);            transition: all 0.5s ease;        }        .timeline-item.visible {            opacity: 1;            transform: translateY(0);        }        .timeline-item:nth-child(odd) {            left: 0;        }        .timeline-item:nth-child(even) {            left: 50%;        }        .timeline-content {            padding: 20px 30px;            background: var(--secondary);            border-radius: 10px;            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);            position: relative;            border: 1px solid rgba(144, 224, 239, 0.1);            overflow: hidden;        }        .timeline-item:nth-child(odd) .timeline-content {            transform: translateX(20px);        }        .timeline-item:nth-child(even) .timeline-content {            transform: translateX(-20px);        }        .timeline-item::after {            content: '';            position: absolute;            width: 25px;            height: 25px;            background: var(--secondary);            border: 4px solid var(--accent);            border-radius: 50%;            top: 15px;            z-index: 1;        }        .timeline-item:nth-child(odd)::after {            right: -17px;        }        .timeline-item:nth-child(even)::after {            left: -17px;        }        .timeline-year {            font-weight: bold;            color: var(--accent);            margin-bottom: 10px;        }        .timeline-content h3 {            color: var(--ice);            margin-bottom: 10px;        }        .timeline-content p {            color: var(--text);            opacity: 0.9;        }        /* Галерея элементов */        .gallery-container {            position: relative;            max-width: 1000px;            margin: 0 auto;        }        .gallery {            display: flex;            overflow-x: auto;            scroll-behavior: smooth;            margin-bottom: 40px;            padding-bottom: 10px;            scrollbar-width: thin;            scrollbar-color: var(--accent) var(--secondary);            scroll-snap-type: x mandatory;        }        .gallery::-webkit-scrollbar {            height: 8px;        }        .gallery::-webkit-scrollbar-track {            background: var(--secondary);            border-radius: 10px;        }        .gallery::-webkit-scrollbar-thumb {            background-color: var(--accent);            border-radius: 10px;        }        .gallery-item {            min-width: 300px;            height: 400px;            margin: 0 15px;            background: var(--secondary);            border-radius: 10px;            overflow: hidden;            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);            transition: all 0.3s ease;            cursor: pointer;            position: relative;            flex: 0 0 auto;            border: 1px solid rgba(144, 224, 239, 0.1);            scroll-snap-align: center;        }        .gallery-item:hover {            box-shadow: 0 10px 20px rgba(0, 180, 216, 0.2);        }        .gallery-item.active {            border: 3px solid var(--accent);        }        .element-image {            height: 70%;            background-size: cover;            background-position: center;        }        .element-name {            padding: 20px;            font-weight: bold;            font-size: 1.2rem;            text-align: center;            color: var(--ice);        }        .nav-button {            position: absolute;            top: 50%;            transform: translateY(-50%);            width: 50px;            height: 50px;            background: var(--secondary);            border: 1px solid var(--accent);            border-radius: 50%;            font-size: 1.5rem;            cursor: pointer;            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);            z-index: 10;            transition: all 0.3s ease;            color: var(--accent);            display: flex;            align-items: center;            justify-content: center;        }        .nav-button:hover {            background: var(--accent);            color: var(--dark);        }        .prev {            left: -70px;        }        .next {            right: -70px;        }        .element-info {            background: var(--secondary);            padding: 30px;            border-radius: 10px;            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);            margin-top: 30px;            max-width: 800px;            margin-left: auto;            margin-right: auto;            border: 1px solid rgba(144, 224, 239, 0.1);        }        #element-name {            color: var(--ice);            margin-bottom: 15px;        }        #element-desc {            color: var(--text);            margin-bottom: 20px;        }        .element-details {            margin-top: 20px;            padding: 15px;            background: rgba(0, 180, 216, 0.1);            border-radius: 5px;            border-left: 4px solid var(--accent);        }        .element-details h4 {            color: var(--ice);            margin-bottom: 10px;        }        .element-details ul {            padding-left: 20px;        }        .element-details li {            margin-bottom: 8px;        }        /* Викторина */        .quiz-container {            max-width: 800px;            margin: 0 auto;            background: var(--secondary);            border-radius: 10px;            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);            overflow: hidden;            border: 1px solid rgba(144, 224, 239, 0.1);        }        .quiz-header {            display: flex;            justify-content: space-between;            padding: 20px;            background: var(--primary);            color: var(--ice);        }        .quiz-body {            padding: 30px;        }        #question-text {            font-size: 1.3rem;            margin-bottom: 30px;            color: var(--ice);        }        .quiz-options {            display: grid;            grid-template-columns: 1fr 1fr;            gap: 15px;        }        .quiz-option {            padding: 15px;            background: var(--primary);            border: 1px solid rgba(144, 224, 239, 0.2);            border-radius: 5px;            cursor: pointer;            transition: all 0.3s ease;            text-align: left;            color: var(--text);        }        .quiz-option:hover {            background: rgba(0, 180, 216, 0.1);            border-color: var(--accent);        }        .quiz-option.correct {            background: rgba(76, 175, 80, 0.2);            color: #4caf50;            border-color: #4caf50;        }        .quiz-option.wrong {            background: rgba(244, 67, 54, 0.2);            color: #f44336;            border-color: #f44336;        }        .quiz-next {            display: none;            width: 100%;            padding: 15px;            background: var(--accent);            color: var(--dark);            border: none;            font-size: 1.1rem;            cursor: pointer;            transition: all 0.3s ease;            font-weight: bold;        }        .quiz-next:hover {            background: #00c8ff;        }        .quiz-result {            text-align: center;            padding: 30px;            color: var(--text);        }        .quiz-result h3 {            color: var(--ice);            margin-bottom: 20px;        }        #final-score {            color: var(--accent);            font-weight: bold;        }        #result-message {            margin-bottom: 20px;            font-size: 1.1rem;        }        .quiz-restart {            margin-top: 20px;            padding: 10px 25px;            background: var(--accent);            color: var(--dark);            border: none;            border-radius: 5px;            cursor: pointer;            transition: all 0.3s ease;            font-weight: bold;        }        .quiz-restart:hover {            background: #00c8ff;        }        .hidden {            display: none;        }        /* Футер */        footer {            background: var(--primary);            color: var(--text);            padding: 50px 5% 30px;            text-align: center;        }        .footer-content {            max-width: 1200px;            margin: 0 auto;        }        .footer-logo {            font-family: 'Playfair Display', serif;            font-size: 2rem;            margin-bottom: 20px;            color: var(--ice);        }        .social-links {            margin: 20px 0;        }        .social-icon {            display: inline-block;            margin: 0 10px;            font-size: 1.5rem;            color: var(--text);            transition: all 0.3s ease;        }        .social-icon:hover {            color: var(--accent);            transform: translateY(-5px);        }        footer p {            margin-top: 10px;            opacity: 0.7;            font-size: 0.9rem;        }        /* Анимации */        @keyframes float {            0%, 100% { transform: translateY(0); }            50% { transform: translateY(-10px); }        }        .floating {            animation: float 4s ease-in-out infinite;        }        /* Адаптивность */        @media screen and (max-width: 1024px) {            .timeline-container::after {                left: 31px;            }            .timeline-item {                width: 100%;                padding-left: 70px;                padding-right: 25px;            }            .timeline-item:nth-child(even) {                left: 0;            }            .timeline-item::after {                left: 18px;                right: auto !important;            }            .timeline-item:nth-child(odd)::after,            .timeline-item:nth-child(even)::after {                left: 18px !important;                right: auto !important;            }            .timeline-item:nth-child(odd) .timeline-content,            .timeline-item:nth-child(even) .timeline-content {                transform: none;            }            .gallery-item {                min-width: 250px;                height: 350px;            }        }        @media screen and (max-width: 768px) {            .banner-content h1 {                font-size: 3rem;            }            .banner-content p {                font-size: 1.2rem;            }            .nav-links {                position: absolute;                right: 0;                top: 80px;                background: var(--primary);                flex-direction: column;                width: 100%;                text-align: center;                clip-path: circle(0px at 90% -10%);                transition: all 0.5s ease-out;                pointer-events: none;            }            .nav-links.active {                clip-path: circle(1000px at 90% -10%);                pointer-events: all;            }            .nav-link {                color: var(--text);                padding: 20px;                margin: 0;            }            .burger {                display: block;            }            .burger.active .line1 {                transform: rotate(-45deg) translate(-5px, 6px);                background-color: var(--accent);            }            .burger.active .line2 {                opacity: 0;            }            .burger.active .line3 {                transform: rotate(45deg) translate(-5px, -6px);                background-color: var(--accent);            }            .quiz-options {                grid-template-columns: 1fr;            }            .nav-button {                width: 40px;                height: 40px;                font-size: 1.2rem;            }            .prev {                left: -50px;            }            .next {                right: -50px;            }            .gallery-item {                min-width: 220px;                height: 280px;            }            .element-image {                height: 60%;            }        }        @media screen and (max-width: 480px) {            .banner-content h1 {                font-size: 2.5rem;            }            section {                padding: 50px 5% !important;                min-height: auto !important;            }            h2 {                font-size: 2rem;                margin-bottom: 30px;            }            .gallery-item {                min-width: 200px;                height: 250px;            }            .nav-button {                width: 35px;                height: 35px;                font-size: 1rem;            }            .prev {                left: -40px;            }            .next {                right: -40px;            }            .timeline-item {                padding-left: 50px;                padding-right: 15px;            }            .timeline-item::after {                width: 20px;                height: 20px;                left: 10px;            }            .star-card:hover, .gallery-item:hover, .timeline-content:hover {                transform: none !important;            }        }    </style></head><body><!-- Главное меню --><nav class="navbar">    <div class="logo">❄️ Ice Majesty</div>    <ul class="nav-links">        <li><a href="#home" class="nav-link">Главная</a></li>        <li><a href="#stars" class="nav-link">Звёзды</a></li>        <li><a href="#history" class="nav-link">История</a></li>        <li><a href="#elements" class="nav-link">Элементы</a></li>        <li><a href="#quiz" class="nav-link">Викторина</a></li>        <li><a href="index-calc.html" class="nav-link">Калькултор элементов</a></li>    </ul>    <div class="burger">        <div class="line1"></div>        <div class="line2"></div>        <div class="line3"></div>    </div></nav><!-- Главный баннер --><section class="main-banner visible" id="home">    <div class="banner-content">        <h1>Искусство на льду</h1>        <p>Откройте для себя мир грации, красоты и спортивного мастерства в фигурном катании</p>        <button class="cta-button" id="explore-btn">Исследовать</button>    </div>    <div class="sparkles" id="sparkles"></div></section><!-- Секция "Звёзды" --><section class="stars-section" id="stars">    <h2>Легенды льда</h2>    <div class="stars-grid">        <!-- Карточки будут добавляться через JS -->    </div></section><!-- Интерактивная временная шкала --><section class="timeline-section" id="history">    <h2>История фигурного катания</h2>    <div class="timeline-container">        <!-- Timeline будет генерироваться через JS -->    </div></section><!-- 3D-галерея элементов --><section class="elements-section" id="elements">    <h2>Элементы фигурного катания</h2>    <div class="gallery-container">        <div class="gallery">            <!-- Элементы будут добавляться через JS -->        </div>        <button class="nav-button prev">‹</button>        <button class="nav-button next">›</button>    </div>    <div class="element-info">        <h3 id="element-name">Выберите элемент</h3>        <p id="element-desc"></p>        <div class="element-details" id="element-details"></div>    </div></section><!-- Интерактивная викторина --><section class="quiz-section" id="quiz">    <h2>Проверь свои знания</h2>    <div class="quiz-container">        <div class="quiz-header">            <span class="quiz-score">Счёт: <span id="score">0</span></span>            <span class="quiz-question">Вопрос <span id="current-question">1</span>/10</span>        </div>        <div class="quiz-body">            <h3 id="question-text"></h3>            <div class="quiz-options">                <!-- Варианты ответов будут добавляться через JS -->            </div>        </div>        <button class="quiz-next" id="next-question">Следующий вопрос</button>    </div>    <div class="quiz-result hidden" id="quiz-result">        <h3>Ваш результат: <span id="final-score"></span>/10</h3>        <p id="result-message"></p>        <button class="quiz-restart" id="restart-quiz">Пройти ещё раз</button>    </div></section><!-- Футер --><footer>    <div class="footer-content">        <div class="footer-logo">Ice Majesty</div>        <p>Фигурное катание - это искусство!</p>    </div></footer><script>    document.addEventListener('DOMContentLoaded', function() {        // Бургер-меню        const burger = document.querySelector('.burger');        const navLinks = document.querySelector('.nav-links');        const navLinkItems = document.querySelectorAll('.nav-link');        burger.addEventListener('click', function() {            navLinks.classList.toggle('active');            burger.classList.toggle('active');        });        navLinkItems.forEach(item => {            item.addEventListener('click', function() {                navLinks.classList.remove('active');                burger.classList.remove('active');            });        });        // Плавная прокрутка        navLinkItems.forEach(link => {            link.addEventListener('click', smoothScroll);        });        function smoothScroll(e) {            e.preventDefault();            const targetId = this.getAttribute('href');            const targetElement = document.querySelector(targetId);            const navbarHeight = document.querySelector('.navbar').offsetHeight;            const targetPosition = targetElement.offsetTop - navbarHeight;            window.scrollTo({                top: targetPosition,                behavior: 'smooth'            });        }        // Эффект при скролле для навбара        window.addEventListener('scroll', function() {            const navbar = document.querySelector('.navbar');            if (window.scrollY > 50) {                navbar.classList.add('scrolled');            } else {                navbar.classList.remove('scrolled');            }        });        // Анимация блесток        const sparklesContainer = document.getElementById('sparkles');        function createSparkles() {            const sparkle = document.createElement('div');            sparkle.className = 'sparkle';            sparkle.style.left = Math.random() * 100 + 'vw';            sparkle.style.top = Math.random() * 100 + 'vh';            sparkle.style.width = (Math.random() * 5 + 2) + 'px';            sparkle.style.height = sparkle.style.width;            sparkle.style.animationDelay = Math.random() * 3 + 's';            sparkle.style.animationDuration = (Math.random() * 2 + 2) + 's';            sparklesContainer.appendChild(sparkle);            setTimeout(() => {                sparkle.remove();            }, 5000);        }        setInterval(createSparkles, 200);        // Секция "Звёзды"        const starsGrid = document.querySelector('.stars-grid');        const starsData = [            {                name: "Алиса Нефёдова",                description: "Юная, но очень целеустремлённая фигуристка, которая влюбилась в вайб фигурного катания.",                image: "https://i.postimg.cc/VNcsST0D/1.jpg",                badge: "Звезда"            },            {                name: "Николай Угожаев",                description: "Победитель этапа Гран-при России, чемпион России по прыжкам.",                image: "https://cdn.ruwiki.ru/ruwiki/files/2/23/%D0%9D%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9_%D0%9C%D0%B8%D1%85%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D0%B8%D1%87_%D0%A3%D0%B3%D0%BE%D0%B6%D0%B0%D0%B5%D0%B2.jpg",                badge: "Самый лучший"            },            {                name: "Юлия Липницкая",                description: "Олимпийская чемпионка в командных соревнованиях 2014, чемпионка мира среди юниоров.",                image: "https://avatars.mds.yandex.net/i?id=937f1c0b36d7861fa93766c54ab626e5_l-8311701-images-thumbs&n=13",                badge: "Легенда"            },            {                name: "Евгений Плющенко",                description: "Двукратный олимпийский чемпион (2006, 2014), трёхкратный чемпион мира.",                image: "https://vpravda.ru/sites/default/files/styles/photo_620_413/public/article/636269372518081331.jpg",                badge: "Икона"            },            {                name: "Алина Загитова",                description: "Олимпийская чемпионка 2018, чемпионка мира и Европы.",                image: "https://avatars.mds.yandex.net/get-entity_search/118194/1021055019/S600xU_2x",                badge: "Чемпион"            },            {                name: "Алексей Ягудин",                description: "Олимпийский чемпион 2002, четырёхкратный чемпион мира.",                image: "https://avatars.mds.yandex.net/get-entity_search/2331613/1169945838/S600xU_2x",                badge: "Легенда"            },            {                name: "Елизавета Туктамышева",                description: "Чемпионка мира и Европы, обладательница уникального тройного акселя.",                image: "https://avatars.mds.yandex.net/get-entity_search/1245366/1169098295/S600xU_2x",                badge: "Чемпион"            },            {                name: "Михаил Коляда",                description: "Чемпион Европы, призёр чемпионатов мира, обладатель сложных четверных прыжков.",                image: "https://avatars.mds.yandex.net/get-entity_search/2103124/1174253930/S600xU_2x",                badge: "Профи"            }        ];        starsData.forEach(star => {            const starCard = document.createElement('div');            starCard.className = 'star-card floating';            starCard.innerHTML = `                <div class="star-image" style="background-image: url('${star.image}')"></div>                <div class="star-info">                    <h3>${star.name}</h3>                    <p>${star.description}</p>                </div>                <div class="star-badge">${star.badge}</div>            `;            starsGrid.appendChild(starCard);        });        // Таймлайн истории        const timelineContainer = document.querySelector('.timeline-container');        const timelineData = [            {                year: "1742",                title: "Первые клубы",                description: "В Эдинбурге создан первый клуб фигуристов, разработаны первые правила."            },            {                year: "1871",                title: "Первые соревнования",                description: "В Европе и Северной Америке начинают проводиться первые соревнования."            },            {                year: "1892",                title: "Основание ISU",                description: "Создан Международный союз конькобежцев (ISU), который существует по сей день."            },            {                year: "1908",                title: "Олимпийский дебют",                description: "Фигурное катание включено в программу летних Олимпийских игр в Лондоне."            },            {                year: "1924",                title: "Зимние Олимпиады",                description: "Фигурное катание становится частью первых зимних Олимпийских игр в Шамони."            },            {                year: "1976",                title: "Революция в катании",                description: "Джанет Линн популяризирует свободный стиль катания, что меняет спорт навсегда."            },            {                year: "1988",                title: "Битва Кармен",                description: "Легендарное противостояние Катарины Витт и Деби Томас на Олимпиаде в Калгари."            },            {                year: "2014",                title: "Командный турнир",                description: "Впервые в программу Олимпийских игр включены командные соревнования."            }        ];        timelineData.forEach((item, index) => {            const timelineItem = document.createElement('div');            timelineItem.className = 'timeline-item';            timelineItem.innerHTML = `                <div class="timeline-content">                    <div class="timeline-year">${item.year}</div>                    <h3>${item.title}</h3>                    <p>${item.description}</p>                </div>            `;            timelineContainer.appendChild(timelineItem);            // Анимация появления при скролле            setTimeout(() => {                const observer = new IntersectionObserver((entries) => {                    entries.forEach(entry => {                        if (entry.isIntersecting) {                            entry.target.classList.add('visible');                        }                    });                }, { threshold: 0.1 });                observer.observe(timelineItem);            }, index * 100);        });        // Галерея элементов        const gallery = document.querySelector('.gallery');        const elementsData = [            {                name: "Аксель",                description: "Единственный прыжок, выполняемый с движения вперёд. Назван в честь норвежского фигуриста Акселя Паульсена. Считается самым сложным из всех прыжков.",                details: `                    <h4>Характеристики:</h4>                    <ul>                        <li>Выполняется с движения вперёд</li>                        <li>Единственный прыжок с нечётным числом оборотов (1.5, 2.5, 3.5)</li>                        <li>Самый сложный прыжок в фигурном катании</li>                        <li>Тройной аксель (3.5 оборота) - вершина мастерства</li>                    </ul>                `            },            {                name: "Лутц",                description: "Прыжок с зубца, выполняемый с внешнего ребра. Характерный замах помогает отличить его от флипа. Часто становится причиной ошибок из-за неправильного ребра.",                details: `                    <h4>Характеристики:</h4>                    <ul>                        <li>Выполняется с внешнего ребра</li>                        <li>Характерный длинный замах перед прыжком</li>                        <li>Часто выполняется с ошибкой рёбер (флутц)</li>                        <li>Один из самых сложных прыжков с зубца</li>                    </ul>                `            },            {                name: "Флип",                description: "Прыжок с зубца, выполняемый с внутреннего ребра. Техника схожа с лутцем, но отличается ребром и направлением захода.",                details: `                    <h4>Характеристики:</h4>                    <ul>                        <li>Выполняется с внутреннего ребра</li>                        <li>Более короткий замах по сравнению с лутцем</li>                        <li>Часто выполняется в каскадах</li>                        <li>Менее сложен, чем лутц</li>                    </ul>                `            },            {                name: "Риттбергер",                description: "Прыжок с ребра (без удара зубцом), выполняемый с внешнего ребра. В англоязычных странах известен как loop (петля).",                details: `                    <h4>Характеристики:</h4>                    <ul>                        <li>Выполняется без удара зубцом</li>                        <li>Техника требует хорошего контроля ребра</li>                        <li>Часто используется в каскадах</li>                        <li>Средний по сложности среди прыжков</li>                    </ul>                `            },            {                name: "Сальхов",                description: "Прыжок с ребра, названный в честь шведского фигуриста Ульриха Сальхова. Характерен заходом с дуги назад-внутрь и махом свободной ноги.",                details: `                    <h4>Характеристики:</h4>                    <ul>                        <li>Первый прыжок, который освоили женщины</li>                        <li>Относительно простой по технике</li>                        <li>Характерный мах свободной ногой</li>                        <li>Часто первый прыжок, который осваивают фигуристы</li>                    </ul>                `            },            {                name: "Тулуп",                description: "Самый простой прыжок с зубца. Название происходит от английских слов 'toe loop' (петля на носке). Часто используется в каскадах.",                details: `                    <h4>Характеристики:</h4>                    <ul>                        <li>Самый простой прыжок с зубца</li>                        <li>Часто используется в каскадах</li>                        <li>Хороший прыжок для начала программы</li>                        <li>Первый прыжок, который осваивают с зубца</li>                    </ul>                `            },            {                name: "Вращение",                description: "Элемент, при котором фигурист вращается на одной ноге вокруг своей оси. Бывают стоячие, сидячие, либела и комбинированные вращения.",                details: `                    <h4>Типы вращений:</h4>                    <ul>                        <li>Стоячее (upright spin)</li>                        <li>Сидячее (sit spin)</li>                        <li>Либела (camel spin)</li>                        <li>Комбинированное (combination spin)</li>                        <li>Вращение в заклоне (layback spin)</li>                    </ul>                `            },            {                name: "Дорожка шагов",                description: "Последовательность шагов, поворотов и смен ребер, демонстрирующая мастерство владения коньком. Оценивается сложность и качество исполнения.",                details: `                    <h4>Особенности:</h4>                    <ul>                        <li>Демонстрирует мастерство владения коньком</li>                        <li>Включает различные повороты и шаги</li>                        <li>Оценивается сложность и качество исполнения</li>                        <li>Может быть прямой, круговой или серпантин</li>                    </ul>                `            }        ];        elementsData.forEach((element, index) => {            const galleryItem = document.createElement('div');            galleryItem.className = 'gallery-item';            if (index === 0) galleryItem.classList.add('active');            galleryItem.innerHTML = `                <div class="element-image" style="background-image: url('https://source.unsplash.com/random/300x300/?figure,skating,${index}')"></div>                <div class="element-name">${element.name}</div>            `;            gallery.appendChild(galleryItem);            galleryItem.addEventListener('click', function() {                document.querySelectorAll('.gallery-item').forEach(item => item.classList.remove('active'));                this.classList.add('active');                updateElementInfo(element);            });        });        function updateElementInfo(element) {            document.getElementById('element-name').textContent = element.name;            document.getElementById('element-desc').textContent = element.description;            document.getElementById('element-details').innerHTML = element.details;        }        // Инициализация первого элемента        updateElementInfo(elementsData[0]);        // Навигация галереи        const prevBtn = document.querySelector('.prev');        const nextBtn = document.querySelector('.next');        nextBtn.addEventListener('click', function() {            const activeItem = document.querySelector('.gallery-item.active');            const nextItem = activeItem.nextElementSibling || gallery.firstElementChild;            activeItem.classList.remove('active');            nextItem.classList.add('active');            const index = Array.from(gallery.children).indexOf(nextItem);            updateElementInfo(elementsData[index]);            nextItem.scrollIntoView({                behavior: 'smooth',                block: 'nearest',                inline: 'center'            });        });        prevBtn.addEventListener('click', function() {            const activeItem = document.querySelector('.gallery-item.active');            const prevItem = activeItem.previousElementSibling || gallery.lastElementChild;            activeItem.classList.remove('active');            prevItem.classList.add('active');            const index = Array.from(gallery.children).indexOf(prevItem);            updateElementInfo(elementsData[index]);            prevItem.scrollIntoView({                behavior: 'smooth',                block: 'nearest',                inline: 'center'            });        });        // Викторина        const quizData = [            {                question: "Какой прыжок является самым сложным в фигурном катании?",                options: ["Лутц", "Аксель", "Сальхов", "Тулуп"],                answer: 1            },            {                question: "Как называется вращение в положении сидя?",                options: ["Либела", "Волчок", "Бильман", "Заклон"],                answer: 1            },            {                question: "Кто из этих фигуристов не является олимпийским чемпионом?",                options: ["Евгений Плющенко", "Алексей Ягудин", "Алина Загитова", "Михаил Коляда"],                answer: 3            },            {                question: "Сколько оборотов в тройном прыжке?",                options: ["2.5", "3", "3.5", "4"],                answer: 1            },            {                question: "Как называется элемент, когда фигурист скользит на одном коньке спиной вперёд?",                options: ["Спираль", "Твизл", "Инерция", "Коанка"],                answer: 0            },            {                question: "В каком году фигурное катание дебютировало на Олимпийских играх?",                options: ["1896", "1908", "1924", "1932"],                answer: 1            },            {                question: "Как называется прыжок, названный в честь шведского фигуриста?",                options: ["Аксель", "Лутц", "Сальхов", "Флип"],                answer: 2            },            {                question: "Какой элемент выполнила первая Юлия Липницкая в командных соревнованиях на Олимпиаде-2014?",                options: ["Тройной аксель", "Бильман", "Каскад 3+3", "Двойной аксель"],                answer: 3            },            {                question: "Как называется позиция в вращении, когда фигурист держит конёк над головой?",                options: ["Волчок", "Либела", "Бильман", "Заклон"],                answer: 2            },            {                question: "Какой минимальный возраст установила ISU для участия в чемпионатах среди взрослых?",                options: ["13 лет", "15 лет", "17 лет", "Нет ограничений"],                answer: 2            }        ];        const quizContainer = document.querySelector('.quiz-container');        const questionText = document.getElementById('question-text');        const quizOptions = document.querySelector('.quiz-options');        const nextQuestionBtn = document.getElementById('next-question');        const quizResult = document.getElementById('quiz-result');        const finalScore = document.getElementById('final-score');        const resultMessage = document.getElementById('result-message');        const restartQuizBtn = document.getElementById('restart-quiz');        const scoreElement = document.getElementById('score');        const currentQuestionElement = document.getElementById('current-question');        let currentQuestion = 0;        let score = 0;        let selectedOption = null;        function loadQuestion() {            const question = quizData[currentQuestion];            questionText.textContent = question.question;            quizOptions.innerHTML = '';            question.options.forEach((option, index) => {                const optionElement = document.createElement('button');                optionElement.className = 'quiz-option';                optionElement.textContent = option;                optionElement.addEventListener('click', function() {                    selectOption(optionElement, index);                });                quizOptions.appendChild(optionElement);            });            currentQuestionElement.textContent = currentQuestion + 1;            nextQuestionBtn.style.display = 'none';        }        function selectOption(optionElement, index) {            if (selectedOption !== null) return;            selectedOption = index;            const question = quizData[currentQuestion];            document.querySelectorAll('.quiz-option').forEach(opt => {                opt.disabled = true;            });            if (index === question.answer) {                optionElement.classList.add('correct');                score++;                scoreElement.textContent = score;            } else {                optionElement.classList.add('wrong');                document.querySelectorAll('.quiz-option')[question.answer].classList.add('correct');            }            nextQuestionBtn.style.display = 'block';        }        function nextQuestion() {            currentQuestion++;            selectedOption = null;            if (currentQuestion < quizData.length) {                loadQuestion();            } else {                showResult();            }        }        function showResult() {            quizContainer.style.display = 'none';            quizResult.classList.remove('hidden');            finalScore.textContent = score;            if (score === quizData.length) {                resultMessage.textContent = 'Потрясающе! Вы настоящий эксперт в фигурном катании!';            } else if (score >= quizData.length * 0.7) {                resultMessage.textContent = 'Отличный результат! Вы хорошо разбираетесь в фигурном катании.';            } else if (score >= quizData.length * 0.4) {                resultMessage.textContent = 'Неплохо! Но есть куда расти.';            } else {                resultMessage.textContent = 'Попробуйте ещё раз! Фигурное катание - сложный, но прекрасный вид спорта.';            }        }        function restartQuiz() {            currentQuestion = 0;            score = 0;            selectedOption = null;            scoreElement.textContent = '0';            quizContainer.style.display = 'block';            quizResult.classList.add('hidden');            loadQuestion();        }        nextQuestionBtn.addEventListener('click', nextQuestion);        restartQuizBtn.addEventListener('click', restartQuiz);        // Загружаем первый вопрос        loadQuestion();        // Анимация появления секций при скролле        const sections = document.querySelectorAll('section:not(.visible)');        sections.forEach(section => {            const observer = new IntersectionObserver((entries) => {                entries.forEach(entry => {                    if (entry.isIntersecting) {                        entry.target.classList.add('visible');                    }                });            }, { threshold: 0.1 });            observer.observe(section);        });        // Кнопка "Исследовать"        const exploreBtn = document.getElementById('explore-btn');        exploreBtn.addEventListener('click', function() {            const starsSection = document.getElementById('stars');            const navbarHeight = document.querySelector('.navbar').offsetHeight;            const targetPosition = starsSection.offsetTop - navbarHeight;            window.scrollTo({                top: targetPosition,                behavior: 'smooth'            });        });    });</script></body></html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ice Majesty - Мир фигурного катания</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap">
+    <style>
+        /* Базовые стили */
+        :root {
+            --primary: #121212;
+            --secondary: #1e1e1e;
+            --accent: #00b4d8;
+            --light: #f8f9fa;
+            --dark: #121212;
+            --ice: #90e0ef;
+            --text: #e9ecef;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Навигация */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            background-color: rgba(18, 18, 18, 0.9);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 1rem 5%;
+            background-color: rgba(18, 18, 18, 0.98);
+        }
+
+        .navbar.scrolled .nav-link {
+            color: var(--ice);
+        }
+
+        .navbar.scrolled .logo {
+            color: var(--accent);
+        }
+
+        .logo {
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--text);
+            text-decoration: none;
+            margin: 0 1.5rem;
+            font-weight: 600;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .burger {
+            display: none;
+            cursor: pointer;
+        }
+
+        .burger div {
+            width: 25px;
+            height: 3px;
+            background-color: var(--text);
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        /* Главный баннер */
+        .main-banner {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 0 5%;
+        }
+
+        .skater-path {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: rgba(144, 224, 239, 0.3);
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .skater {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2300b4d8"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M7.07 18.28c.43-.9 3.05-1.78 4.93-1.78s4.51.88 4.93 1.78C15.57 19.36 13.86 20 12 20s-3.57-.64-4.93-1.72zm11.29-1.45c-1.43-1.74-4.9-2.33-6.36-2.33s-4.93.59-6.36 2.33C4.62 15.49 4 13.82 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 1.82-.62 3.49-1.64 4.83zM12 6c-1.94 0-3.5 1.56-3.5 3.5S10.06 13 12 13s3.5-1.56 3.5-3.5S13.94 6 12 6zm0 5c-.83 0-1.5-.67-1.5-1.5S11.17 8 12 8s1.5.67 1.5 1.5S12.83 11 12 11z"/></svg>') no-repeat center;
+            background-size: contain;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            animation: skate 8s linear infinite;
+            filter: drop-shadow(0 0 10px rgba(0, 180, 216, 0.7));
+        }
+
+        @keyframes skate {
+            0% { left: 0; transform: translateY(-50%) rotate(0deg); }
+            25% { transform: translateY(-50%) rotate(90deg); }
+            50% { left: calc(100% - 80px); transform: translateY(-50%) rotate(180deg); }
+            75% { transform: translateY(-50%) rotate(270deg); }
+            100% { left: 0; transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .ice-trail {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .ice-trail::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--ice), transparent);
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            opacity: 0.3;
+        }
+
+        .banner-content {
+            z-index: 10;
+            max-width: 800px;
+        }
+
+        .banner-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, var(--ice), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .banner-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            padding: 12px 30px;
+            background: transparent;
+            color: var(--ice);
+            border: 2px solid var(--accent);
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:hover {
+            background: var(--accent);
+            color: var(--dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 180, 216, 0.3);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(144, 224, 239, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .sparkles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: sparkle 3s infinite;
+            filter: blur(1px);
+        }
+
+        @keyframes sparkle {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+
+        /* Секции */
+        section {
+            padding: 100px 5%;
+            min-height: 100vh;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+            color: var(--ice);
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 4px;
+            background: var(--accent);
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Секция "Звёзды" */
+        .stars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .star-card {
+            background: var(--secondary);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid rgba(144, 224, 239, 0.1);
+        }
+
+        .star-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 180, 216, 0.2);
+            border-color: var(--accent);
+        }
+
+        .star-image {
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .star-info {
+            padding: 20px;
+        }
+
+        .star-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--ice);
+        }
+
+        .star-info p {
+            color: var(--text);
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .star-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: var(--dark);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* Таймлайн */
+        .timeline-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background: var(--accent);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 3px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.5s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+
+        .timeline-content {
+            padding: 20px 30px;
+            background: var(--secondary);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            border: 1px solid rgba(144, 224, 239, 0.1);
+            overflow: hidden;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            transform: translateX(20px);
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            transform: translateX(-20px);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: var(--secondary);
+            border: 4px solid var(--accent);
+            border-radius: 50%;
+            top: 15px;
+            z-index: 1;
+        }
+
+        .timeline-item:nth-child(odd)::after {
+            right: -17px;
+        }
+
+        .timeline-item:nth-child(even)::after {
+            left: -17px;
+        }
+
+        .timeline-year {
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .timeline-content h3 {
+            color: var(--ice);
+            margin-bottom: 10px;
+        }
+
+        .timeline-content p {
+            color: var(--text);
+            opacity: 0.9;
+        }
+
+        /* Галерея элементов */
+        .gallery-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .gallery {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            margin-bottom: 40px;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) var(--secondary);
+            scroll-snap-type: x mandatory;
+        }
+
+        .gallery::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .gallery::-webkit-scrollbar-track {
+            background: var(--secondary);
+            border-radius: 10px;
+        }
+
+        .gallery::-webkit-scrollbar-thumb {
+            background-color: var(--accent);
+            border-radius: 10px;
+        }
+
+        .gallery-item {
+            min-width: 300px;
+            height: 400px;
+            margin: 0 15px;
+            background: var(--secondary);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            flex: 0 0 auto;
+            border: 1px solid rgba(144, 224, 239, 0.1);
+            scroll-snap-align: center;
+        }
+
+        .gallery-item:hover {
+            box-shadow: 0 10px 20px rgba(0, 180, 216, 0.2);
+        }
+
+        .gallery-item.active {
+            border: 3px solid var(--accent);
+        }
+
+        .element-image {
+            height: 70%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .element-name {
+            padding: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: center;
+            color: var(--ice);
+        }
+
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: var(--secondary);
+            border: 1px solid var(--accent);
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            transition: all 0.3s ease;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-button:hover {
+            background: var(--accent);
+            color: var(--dark);
+        }
+
+        .prev {
+            left: -70px;
+        }
+
+        .next {
+            right: -70px;
+        }
+
+        .element-info {
+            background: var(--secondary);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid rgba(144, 224, 239, 0.1);
+        }
+
+        #element-name {
+            color: var(--ice);
+            margin-bottom: 15px;
+        }
+
+        #element-desc {
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+
+        .element-details {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 180, 216, 0.1);
+            border-radius: 5px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .element-details h4 {
+            color: var(--ice);
+            margin-bottom: 10px;
+        }
+
+        .element-details ul {
+            padding-left: 20px;
+        }
+
+        .element-details li {
+            margin-bottom: 8px;
+        }
+
+        /* Викторина */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--secondary);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            border: 1px solid rgba(144, 224, 239, 0.1);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background: var(--primary);
+            color: var(--ice);
+        }
+
+        .quiz-body {
+            padding: 30px;
+        }
+
+        #question-text {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            color: var(--ice);
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .quiz-option {
+            padding: 15px;
+            background: var(--primary);
+            border: 1px solid rgba(144, 224, 239, 0.2);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            color: var(--text);
+        }
+
+        .quiz-option:hover {
+            background: rgba(0, 180, 216, 0.1);
+            border-color: var(--accent);
+        }
+
+        .quiz-option.correct {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            border-color: #4caf50;
+        }
+
+        .quiz-option.wrong {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+            border-color: #f44336;
+        }
+
+        .quiz-next {
+            display: none;
+            width: 100%;
+            padding: 15px;
+            background: var(--accent);
+            color: var(--dark);
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .quiz-next:hover {
+            background: #00c8ff;
+        }
+
+        .quiz-result {
+            text-align: center;
+            padding: 30px;
+            color: var(--text);
+        }
+
+        .quiz-result h3 {
+            color: var(--ice);
+            margin-bottom: 20px;
+        }
+
+        #final-score {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        #result-message {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .quiz-restart {
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: var(--accent);
+            color: var(--dark);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .quiz-restart:hover {
+            background: #00c8ff;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Футер */
+        footer {
+            background: var(--primary);
+            color: var(--text);
+            padding: 50px 5% 30px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--ice);
+        }
+
+        .social-links {
+            margin: 20px 0;
+        }
+
+        .social-icon {
+            display: inline-block;
+            margin: 0 10px;
+            font-size: 1.5rem;
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        footer p {
+            margin-top: 10px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* Анимации */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Адаптивность */
+        @media screen and (max-width: 1024px) {
+            .timeline-container::after {
+                left: 31px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+
+            .timeline-item::after {
+                left: 18px;
+                right: auto !important;
+            }
+
+            .timeline-item:nth-child(odd)::after,
+            .timeline-item:nth-child(even)::after {
+                left: 18px !important;
+                right: auto !important;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                transform: none;
+            }
+
+            .gallery-item {
+                min-width: 250px;
+                height: 350px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .banner-content h1 {
+                font-size: 3rem;
+            }
+
+            .banner-content p {
+                font-size: 1.2rem;
+            }
+
+            .nav-links {
+                position: absolute;
+                right: 0;
+                top: 80px;
+                background: var(--primary);
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                clip-path: circle(0px at 90% -10%);
+                transition: all 0.5s ease-out;
+                pointer-events: none;
+            }
+
+            .nav-links.active {
+                clip-path: circle(1000px at 90% -10%);
+                pointer-events: all;
+            }
+
+            .nav-link {
+                color: var(--text);
+                padding: 20px;
+                margin: 0;
+            }
+
+            .burger {
+                display: block;
+            }
+
+            .burger.active .line1 {
+                transform: rotate(-45deg) translate(-5px, 6px);
+                background-color: var(--accent);
+            }
+
+            .burger.active .line2 {
+                opacity: 0;
+            }
+
+            .burger.active .line3 {
+                transform: rotate(45deg) translate(-5px, -6px);
+                background-color: var(--accent);
+            }
+
+            .quiz-options {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-button {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .prev {
+                left: -50px;
+            }
+
+            .next {
+                right: -50px;
+            }
+
+            .gallery-item {
+                min-width: 220px;
+                height: 280px;
+            }
+
+            .element-image {
+                height: 60%;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .banner-content h1 {
+                font-size: 2.5rem;
+            }
+
+            section {
+                padding: 50px 5% !important;
+                min-height: auto !important;
+            }
+
+            h2 {
+                font-size: 2rem;
+                margin-bottom: 30px;
+            }
+
+            .gallery-item {
+                min-width: 200px;
+                height: 250px;
+            }
+
+            .nav-button {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+
+            .prev {
+                left: -40px;
+            }
+
+            .next {
+                right: -40px;
+            }
+
+            .timeline-item {
+                padding-left: 50px;
+                padding-right: 15px;
+            }
+
+            .timeline-item::after {
+                width: 20px;
+                height: 20px;
+                left: 10px;
+            }
+
+            .star-card:hover, .gallery-item:hover, .timeline-content:hover {
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Главное меню -->
+<nav class="navbar">
+    <div class="logo">❄️ Ice Majesty</div>
+    <ul class="nav-links">
+        <li><a href="#home" class="nav-link">Главная</a></li>
+        <li><a href="#stars" class="nav-link">Звёзды</a></li>
+        <li><a href="#history" class="nav-link">История</a></li>
+        <li><a href="#elements" class="nav-link">Элементы</a></li>
+        <li><a href="#quiz" class="nav-link">Викторина</a></li>
+        <li><a href="/index-calc.html" class="nav-link">Калькултор элементов</a></li>
+    </ul>
+    <div class="burger">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+    </div>
+</nav>
+
+<!-- Главный баннер -->
+<section class="main-banner visible" id="home">
+    <div class="banner-content">
+        <h1>Искусство на льду</h1>
+        <p>Откройте для себя мир грации, красоты и спортивного мастерства в фигурном катании</p>
+        <button class="cta-button" id="explore-btn">Исследовать</button>
+    </div>
+    <div class="sparkles" id="sparkles"></div>
+</section>
+
+<!-- Секция "Звёзды" -->
+<section class="stars-section" id="stars">
+    <h2>Легенды льда</h2>
+    <div class="stars-grid">
+        <!-- Карточки будут добавляться через JS -->
+    </div>
+</section>
+
+<!-- Интерактивная временная шкала -->
+<section class="timeline-section" id="history">
+    <h2>История фигурного катания</h2>
+    <div class="timeline-container">
+        <!-- Timeline будет генерироваться через JS -->
+    </div>
+</section>
+
+<!-- 3D-галерея элементов -->
+<section class="elements-section" id="elements">
+    <h2>Элементы фигурного катания</h2>
+    <div class="gallery-container">
+        <div class="gallery">
+            <!-- Элементы будут добавляться через JS -->
+        </div>
+        <button class="nav-button prev">‹</button>
+        <button class="nav-button next">›</button>
+    </div>
+    <div class="element-info">
+        <h3 id="element-name">Выберите элемент</h3>
+        <p id="element-desc"></p>
+        <div class="element-details" id="element-details"></div>
+    </div>
+</section>
+
+<!-- Интерактивная викторина -->
+<section class="quiz-section" id="quiz">
+    <h2>Проверь свои знания</h2>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <span class="quiz-score">Счёт: <span id="score">0</span></span>
+            <span class="quiz-question">Вопрос <span id="current-question">1</span>/10</span>
+        </div>
+        <div class="quiz-body">
+            <h3 id="question-text"></h3>
+            <div class="quiz-options">
+                <!-- Варианты ответов будут добавляться через JS -->
+            </div>
+        </div>
+        <button class="quiz-next" id="next-question">Следующий вопрос</button>
+    </div>
+    <div class="quiz-result hidden" id="quiz-result">
+        <h3>Ваш результат: <span id="final-score"></span>/10</h3>
+        <p id="result-message"></p>
+        <button class="quiz-restart" id="restart-quiz">Пройти ещё раз</button>
+    </div>
+</section>
+
+<!-- Футер -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-logo">Ice Majesty</div>
+        <p>Фигурное катание - это искусство!</p>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Бургер-меню
+        const burger = document.querySelector('.burger');
+        const navLinks = document.querySelector('.nav-links');
+        const navLinkItems = document.querySelectorAll('.nav-link');
+
+        burger.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            burger.classList.toggle('active');
+        });
+
+        navLinkItems.forEach(item => {
+            item.addEventListener('click', function() {
+                navLinks.classList.remove('active');
+                burger.classList.remove('active');
+            });
+        });
+
+        // Плавная прокрутка
+        navLinkItems.forEach(link => {
+            link.addEventListener('click', smoothScroll);
+        });
+
+        function smoothScroll(e) {
+            // Проверяем, является ли ссылка якорем на текущей странице
+            const href = this.getAttribute('href');
+
+            if (href.startsWith('#') && document.querySelector(href)) {
+                e.preventDefault();
+                const targetElement = document.querySelector(href);
+                const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                const targetPosition = targetElement.offsetTop - navbarHeight;
+
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+            // Для всех других ссылок (включая index-calc.html) - обычное поведение
+        }
+
+        // Эффект при скролле для навбара
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Анимация блесток
+        const sparklesContainer = document.getElementById('sparkles');
+
+        function createSparkles() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + 'vw';
+            sparkle.style.top = Math.random() * 100 + 'vh';
+            sparkle.style.width = (Math.random() * 5 + 2) + 'px';
+            sparkle.style.height = sparkle.style.width;
+            sparkle.style.animationDelay = Math.random() * 3 + 's';
+            sparkle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            sparklesContainer.appendChild(sparkle);
+
+            setTimeout(() => {
+                sparkle.remove();
+            }, 5000);
+        }
+
+        setInterval(createSparkles, 200);
+
+        // Секция "Звёзды"
+        const starsGrid = document.querySelector('.stars-grid');
+        const starsData = [
+            {
+                name: "Алиса Нефёдова",
+                description: "Юная, но очень целеустремлённая фигуристка, которая влюбилась в вайб фигурного катания.",
+                image: "https://i.postimg.cc/VNcsST0D/1.jpg",
+                badge: "Звезда"
+            },
+            {
+                name: "Николай Угожаев",
+                description: "Победитель этапа Гран-при России, чемпион России по прыжкам.",
+                image: "https://cdn.ruwiki.ru/ruwiki/files/2/23/%D0%9D%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9_%D0%9C%D0%B8%D1%85%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D0%B8%D1%87_%D0%A3%D0%B3%D0%BE%D0%B6%D0%B0%D0%B5%D0%B2.jpg",
+                badge: "Самый лучший"
+            },
+            {
+                name: "Юлия Липницкая",
+                description: "Олимпийская чемпионка в командных соревнованиях 2014, чемпионка мира среди юниоров.",
+                image: "https://avatars.mds.yandex.net/i?id=937f1c0b36d7861fa93766c54ab626e5_l-8311701-images-thumbs&n=13",
+                badge: "Легенда"
+            },
+            {
+                name: "Евгений Плющенко",
+                description: "Двукратный олимпийский чемпион (2006, 2014), трёхкратный чемпион мира.",
+                image: "https://vpravda.ru/sites/default/files/styles/photo_620_413/public/article/636269372518081331.jpg",
+                badge: "Икона"
+            },
+            {
+                name: "Алина Загитова",
+                description: "Олимпийская чемпионка 2018, чемпионка мира и Европы.",
+                image: "https://avatars.mds.yandex.net/get-entity_search/118194/1021055019/S600xU_2x",
+                badge: "Чемпион"
+            },
+            {
+                name: "Алексей Ягудин",
+                description: "Олимпийский чемпион 2002, четырёхкратный чемпион мира.",
+                image: "https://avatars.mds.yandex.net/get-entity_search/2331613/1169945838/S600xU_2x",
+                badge: "Легенда"
+            },
+            {
+                name: "Елизавета Туктамышева",
+                description: "Чемпионка мира и Европы, обладательница уникального тройного акселя.",
+                image: "https://avatars.mds.yandex.net/get-entity_search/1245366/1169098295/S600xU_2x",
+                badge: "Чемпион"
+            },
+            {
+                name: "Михаил Коляда",
+                description: "Чемпион Европы, призёр чемпионатов мира, обладатель сложных четверных прыжков.",
+                image: "https://avatars.mds.yandex.net/get-entity_search/2103124/1174253930/S600xU_2x",
+                badge: "Профи"
+            }
+        ];
+
+        starsData.forEach(star => {
+            const starCard = document.createElement('div');
+            starCard.className = 'star-card floating';
+            starCard.innerHTML = `
+                <div class="star-image" style="background-image: url('${star.image}')"></div>
+                <div class="star-info">
+                    <h3>${star.name}</h3>
+                    <p>${star.description}</p>
+                </div>
+                <div class="star-badge">${star.badge}</div>
+            `;
+            starsGrid.appendChild(starCard);
+        });
+
+        // Таймлайн истории
+        const timelineContainer = document.querySelector('.timeline-container');
+        const timelineData = [
+            {
+                year: "1742",
+                title: "Первые клубы",
+                description: "В Эдинбурге создан первый клуб фигуристов, разработаны первые правила."
+            },
+            {
+                year: "1871",
+                title: "Первые соревнования",
+                description: "В Европе и Северной Америке начинают проводиться первые соревнования."
+            },
+            {
+                year: "1892",
+                title: "Основание ISU",
+                description: "Создан Международный союз конькобежцев (ISU), который существует по сей день."
+            },
+            {
+                year: "1908",
+                title: "Олимпийский дебют",
+                description: "Фигурное катание включено в программу летних Олимпийских игр в Лондоне."
+            },
+            {
+                year: "1924",
+                title: "Зимние Олимпиады",
+                description: "Фигурное катание становится частью первых зимних Олимпийских игр в Шамони."
+            },
+            {
+                year: "1976",
+                title: "Революция в катании",
+                description: "Джанет Линн популяризирует свободный стиль катания, что меняет спорт навсегда."
+            },
+            {
+                year: "1988",
+                title: "Битва Кармен",
+                description: "Легендарное противостояние Катарины Витт и Деби Томас на Олимпиаде в Калгари."
+            },
+            {
+                year: "2014",
+                title: "Командный турнир",
+                description: "Впервые в программу Олимпийских игр включены командные соревнования."
+            }
+        ];
+
+        timelineData.forEach((item, index) => {
+            const timelineItem = document.createElement('div');
+            timelineItem.className = 'timeline-item';
+            timelineItem.innerHTML = `
+                <div class="timeline-content">
+                    <div class="timeline-year">${item.year}</div>
+                    <h3>${item.title}</h3>
+                    <p>${item.description}</p>
+                </div>
+            `;
+            timelineContainer.appendChild(timelineItem);
+
+            // Анимация появления при скролле
+            setTimeout(() => {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                observer.observe(timelineItem);
+            }, index * 100);
+        });
+
+        // Галерея элементов
+        const gallery = document.querySelector('.gallery');
+        const elementsData = [
+            {
+                name: "Аксель",
+                description: "Единственный прыжок, выполняемый с движения вперёд. Назван в честь норвежского фигуриста Акселя Паульсена. Считается самым сложным из всех прыжков.",
+                details: `
+                    <h4>Характеристики:</h4>
+                    <ul>
+                        <li>Выполняется с движения вперёд</li>
+                        <li>Единственный прыжок с нечётным числом оборотов (1.5, 2.5, 3.5)</li>
+                        <li>Самый сложный прыжок в фигурном катании</li>
+                        <li>Тройной аксель (3.5 оборота) - вершина мастерства</li>
+                    </ul>
+                `
+            },
+            {
+                name: "Лутц",
+                description: "Прыжок с зубца, выполняемый с внешнего ребра. Характерный замах помогает отличить его от флипа. Часто становится причиной ошибок из-за неправильного ребра.",
+                details: `
+                    <h4>Характеристики:</h4>
+                    <ul>
+                        <li>Выполняется с внешнего ребра</li>
+                        <li>Характерный длинный замах перед прыжком</li>
+                        <li>Часто выполняется с ошибкой рёбер (флутц)</li>
+                        <li>Один из самых сложных прыжков с зубца</li>
+                    </ul>
+                `
+            },
+            {
+                name: "Флип",
+                description: "Прыжок с зубца, выполняемый с внутреннего ребра. Техника схожа с лутцем, но отличается ребром и направлением захода.",
+                details: `
+                    <h4>Характеристики:</h4>
+                    <ul>
+                        <li>Выполняется с внутреннего ребра</li>
+                        <li>Более короткий замах по сравнению с лутцем</li>
+                        <li>Часто выполняется в каскадах</li>
+                        <li>Менее сложен, чем лутц</li>
+                    </ul>
+                `
+            },
+            {
+                name: "Риттбергер",
+                description: "Прыжок с ребра (без удара зубцом), выполняемый с внешнего ребра. В англоязычных странах известен как loop (петля).",
+                details: `
+                    <h4>Характеристики:</h4>
+                    <ul>
+                        <li>Выполняется без удара зубцом</li>
+                        <li>Техника требует хорошего контроля ребра</li>
+                        <li>Часто используется в каскадах</li>
+                        <li>Средний по сложности среди прыжков</li>
+                    </ul>
+                `
+            },
+            {
+                name: "Сальхов",
+                description: "Прыжок с ребра, названный в честь шведского фигуриста Ульриха Сальхова. Характерен заходом с дуги назад-внутрь и махом свободной ноги.",
+                details: `
+                    <h4>Характеристики:</h4>
+                    <ul>
+                        <li>Первый прыжок, который освоили женщины</li>
+                        <li>Относительно простой по технике</li>
+                        <li>Характерный мах свободной ногой</li>
+                        <li>Часто первый прыжок, который осваивают фигуристы</li>
+                    </ul>
+                `
+            },
+            {
+                name: "Тулуп",
+                description: "Самый простой прыжок с зубца. Название происходит от английских слов 'toe loop' (петля на носке). Часто используется в каскадах.",
+                details: `
+                    <h4>Характеристики:</h4>
+                    <ul>
+                        <li>Самый простой прыжок с зубца</li>
+                        <li>Часто используется в каскадах</li>
+                        <li>Хороший прыжок для начала программы</li>
+                        <li>Первый прыжок, который осваивают с зубца</li>
+                    </ul>
+                `
+            },
+            {
+                name: "Вращение",
+                description: "Элемент, при котором фигурист вращается на одной ноге вокруг своей оси. Бывают стоячие, сидячие, либела и комбинированные вращения.",
+                details: `
+                    <h4>Типы вращений:</h4>
+                    <ul>
+                        <li>Стоячее (upright spin)</li>
+                        <li>Сидячее (sit spin)</li>
+                        <li>Либела (camel spin)</li>
+                        <li>Комбинированное (combination spin)</li>
+                        <li>Вращение в заклоне (layback spin)</li>
+                    </ul>
+                `
+            },
+            {
+                name: "Дорожка шагов",
+                description: "Последовательность шагов, поворотов и смен ребер, демонстрирующая мастерство владения коньком. Оценивается сложность и качество исполнения.",
+                details: `
+                    <h4>Особенности:</h4>
+                    <ul>
+                        <li>Демонстрирует мастерство владения коньком</li>
+                        <li>Включает различные повороты и шаги</li>
+                        <li>Оценивается сложность и качество исполнения</li>
+                        <li>Может быть прямой, круговой или серпантин</li>
+                    </ul>
+                `
+            }
+        ];
+
+        elementsData.forEach((element, index) => {
+            const galleryItem = document.createElement('div');
+            galleryItem.className = 'gallery-item';
+            if (index === 0) galleryItem.classList.add('active');
+            galleryItem.innerHTML = `
+                <div class="element-image" style="background-image: url('https://source.unsplash.com/random/300x300/?figure,skating,${index}')"></div>
+                <div class="element-name">${element.name}</div>
+            `;
+            gallery.appendChild(galleryItem);
+
+            galleryItem.addEventListener('click', function() {
+                document.querySelectorAll('.gallery-item').forEach(item => item.classList.remove('active'));
+                this.classList.add('active');
+                updateElementInfo(element);
+            });
+        });
+
+        function updateElementInfo(element) {
+            document.getElementById('element-name').textContent = element.name;
+            document.getElementById('element-desc').textContent = element.description;
+            document.getElementById('element-details').innerHTML = element.details;
+        }
+
+        // Инициализация первого элемента
+        updateElementInfo(elementsData[0]);
+
+        // Навигация галереи
+        const prevBtn = document.querySelector('.prev');
+        const nextBtn = document.querySelector('.next');
+
+        nextBtn.addEventListener('click', function() {
+            const activeItem = document.querySelector('.gallery-item.active');
+            const nextItem = activeItem.nextElementSibling || gallery.firstElementChild;
+
+            activeItem.classList.remove('active');
+            nextItem.classList.add('active');
+
+            const index = Array.from(gallery.children).indexOf(nextItem);
+            updateElementInfo(elementsData[index]);
+
+            nextItem.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
+        });
+
+        prevBtn.addEventListener('click', function() {
+            const activeItem = document.querySelector('.gallery-item.active');
+            const prevItem = activeItem.previousElementSibling || gallery.lastElementChild;
+
+            activeItem.classList.remove('active');
+            prevItem.classList.add('active');
+
+            const index = Array.from(gallery.children).indexOf(prevItem);
+            updateElementInfo(elementsData[index]);
+
+            prevItem.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
+        });
+
+        // Викторина
+        const quizData = [
+            {
+                question: "Какой прыжок является самым сложным в фигурном катании?",
+                options: ["Лутц", "Аксель", "Сальхов", "Тулуп"],
+                answer: 1
+            },
+            {
+                question: "Как называется вращение в положении сидя?",
+                options: ["Либела", "Волчок", "Бильман", "Заклон"],
+                answer: 1
+            },
+            {
+                question: "Кто из этих фигуристов не является олимпийским чемпионом?",
+                options: ["Евгений Плющенко", "Алексей Ягудин", "Алина Загитова", "Михаил Коляда"],
+                answer: 3
+            },
+            {
+                question: "Сколько оборотов в тройном прыжке?",
+                options: ["2.5", "3", "3.5", "4"],
+                answer: 1
+            },
+            {
+                question: "Как называется элемент, когда фигурист скользит на одном коньке спиной вперёд?",
+                options: ["Спираль", "Твизл", "Инерция", "Коанка"],
+                answer: 0
+            },
+            {
+                question: "В каком году фигурное катание дебютировало на Олимпийских играх?",
+                options: ["1896", "1908", "1924", "1932"],
+                answer: 1
+            },
+            {
+                question: "Как называется прыжок, названный в честь шведского фигуриста?",
+                options: ["Аксель", "Лутц", "Сальхов", "Флип"],
+                answer: 2
+            },
+            {
+                question: "Какой элемент выполнила первая Юлия Липницкая в командных соревнованиях на Олимпиаде-2014?",
+                options: ["Тройной аксель", "Бильман", "Каскад 3+3", "Двойной аксель"],
+                answer: 3
+            },
+            {
+                question: "Как называется позиция в вращении, когда фигурист держит конёк над головой?",
+                options: ["Волчок", "Либела", "Бильман", "Заклон"],
+                answer: 2
+            },
+            {
+                question: "Какой минимальный возраст установила ISU для участия в чемпионатах среди взрослых?",
+                options: ["13 лет", "15 лет", "17 лет", "Нет ограничений"],
+                answer: 2
+            }
+        ];
+
+        const quizContainer = document.querySelector('.quiz-container');
+        const questionText = document.getElementById('question-text');
+        const quizOptions = document.querySelector('.quiz-options');
+        const nextQuestionBtn = document.getElementById('next-question');
+        const quizResult = document.getElementById('quiz-result');
+        const finalScore = document.getElementById('final-score');
+        const resultMessage = document.getElementById('result-message');
+        const restartQuizBtn = document.getElementById('restart-quiz');
+        const scoreElement = document.getElementById('score');
+        const currentQuestionElement = document.getElementById('current-question');
+
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedOption = null;
+
+        function loadQuestion() {
+            const question = quizData[currentQuestion];
+            questionText.textContent = question.question;
+            quizOptions.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('button');
+                optionElement.className = 'quiz-option';
+                optionElement.textContent = option;
+                optionElement.addEventListener('click', function() {
+                    selectOption(optionElement, index);
+                });
+                quizOptions.appendChild(optionElement);
+            });
+
+            currentQuestionElement.textContent = currentQuestion + 1;
+            nextQuestionBtn.style.display = 'none';
+        }
+
+        function selectOption(optionElement, index) {
+            if (selectedOption !== null) return;
+
+            selectedOption = index;
+            const question = quizData[currentQuestion];
+
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.disabled = true;
+            });
+
+            if (index === question.answer) {
+                optionElement.classList.add('correct');
+                score++;
+                scoreElement.textContent = score;
+            } else {
+                optionElement.classList.add('wrong');
+                document.querySelectorAll('.quiz-option')[question.answer].classList.add('correct');
+            }
+
+            nextQuestionBtn.style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            selectedOption = null;
+
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            quizContainer.style.display = 'none';
+            quizResult.classList.remove('hidden');
+            finalScore.textContent = score;
+
+            if (score === quizData.length) {
+                resultMessage.textContent = 'Потрясающе! Вы настоящий эксперт в фигурном катании!';
+            } else if (score >= quizData.length * 0.7) {
+                resultMessage.textContent = 'Отличный результат! Вы хорошо разбираетесь в фигурном катании.';
+            } else if (score >= quizData.length * 0.4) {
+                resultMessage.textContent = 'Неплохо! Но есть куда расти.';
+            } else {
+                resultMessage.textContent = 'Попробуйте ещё раз! Фигурное катание - сложный, но прекрасный вид спорта.';
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            selectedOption = null;
+            scoreElement.textContent = '0';
+            quizContainer.style.display = 'block';
+            quizResult.classList.add('hidden');
+            loadQuestion();
+        }
+
+        nextQuestionBtn.addEventListener('click', nextQuestion);
+        restartQuizBtn.addEventListener('click', restartQuiz);
+
+        // Загружаем первый вопрос
+        loadQuestion();
+
+        // Анимация появления секций при скролле
+        const sections = document.querySelectorAll('section:not(.visible)');
+
+        sections.forEach(section => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            observer.observe(section);
+        });
+
+        // Кнопка "Исследовать"
+        const exploreBtn = document.getElementById('explore-btn');
+        exploreBtn.addEventListener('click', function() {
+            const starsSection = document.getElementById('stars');
+            const navbarHeight = document.querySelector('.navbar').offsetHeight;
+            const targetPosition = starsSection.offsetTop - navbarHeight;
+
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
+</body>
+</html>
